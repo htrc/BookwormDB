@@ -3,7 +3,9 @@
 import json
 import re
 import copy
-import MySQLdb
+#import MySQLdb
+import mysql.connector
+#import _mysql_connector
 import hashlib
 import logging
 from bwExceptions import BookwormException
@@ -49,7 +51,7 @@ class DbConnect(object):
 
         connargs = {
                 "db": database,
-                "read_default_file": configuration_file.location,
+                "option_files": configuration_file.location,
                 "use_unicode": 'True',
                 "charset": 'utf8'
                 }
@@ -61,13 +63,13 @@ class DbConnect(object):
             connargs['host'] = prefs['HOST']
 
         try:
-            self.db = MySQLdb.connect(**connargs)
+            self.db = mysql.connector.MySQLConnection(**connargs)
         except:
             try:
                 # Sometimes mysql wants to connect over this rather than a socket:
                 # falling back to it for backward-compatibility.                
                 connargs["host"] = "127.0.0.1"
-                self.db = MySQLdb.connect(**connargs)
+                self.db = mysql.connector.MySQLConnection(**connargs)
             except:
                 logging.error(configuration_file.location)
                 raise
@@ -412,7 +414,7 @@ class userquery:
 #            self.relevantTables.remove('catalog')
         try:
             moreTables = self.tablesNeededForQuery(columns)
-        except MySQLdb.ProgrammingError:
+        except mysql.connector.errors.ProgrammingError:
             # What happens on old-style Bookworm constructions.
             moreTables = set()
         self.relevantTables = self.relevantTables.union(moreTables)
@@ -486,7 +488,7 @@ class userquery:
                 self.cursor.execute("CREATE TABLE %s (bookid MEDIUMINT, PRIMARY KEY (bookid)) ENGINE=MYISAM;" %tmpcatalog)
                 self.cursor.execute("INSERT IGNORE INTO %s %s;" %(tmpcatalog, listofBookids))
 
-            except MySQLdb.OperationalError, e:
+            except mysql.connector.errors.OperationalError, e:
                 # Usually the error will be 1050, which is a good thing: it means we don't need to
                 # create the table.
                 # If it's not, something bad is happening.
@@ -1173,7 +1175,7 @@ def where_from_hash(myhash, joiner=None, comp = " = ", escapeStrings=True, list_
                         quotesep = ""
 
                     def escape(value):
-                        return MySQLdb.escape_string(to_unicode(value))
+                        return to_unicode(value)
                 else:
 
                     def escape(value):

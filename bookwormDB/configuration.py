@@ -3,12 +3,13 @@
 import ConfigParser
 import os
 import re
-import MySQLdb
+#import MySQLdb
 import argparse
 import getpass
 import subprocess
 import logging
 import uuid
+import mysql.connector
 
 def create(ask_about_defaults=True,database=None):
     """
@@ -204,17 +205,17 @@ class Configfile:
         MySQL server with the new password at the same time.
         """
         try:            
-            db = MySQLdb.connect(read_default_file="~/.my.cnf")
+            db = mysql.connector.MySQLConnection(read_default_file="~/.my.cnf")
             db.cursor().execute("GRANT SELECT ON *.* to root@localhost")
-        except MySQLdb.OperationalError, message:
+        except mysql.connector.errors.OperationalError, message:
             try:
-                db = MySQLdb.connect(user="root",passwd="",host="127.0.0.1")
-            except MySQLdb.OperationalError, message:
+                db = mysql.connector.MySQLConnection(user="root",passwd="",host="127.0.0.1")
+            except mysql.connector.errors.OperationalError, message:
                 user = raw_input("""Can't log in automatically as {}:
                 Please enter an *administrative* username for your mysql with
                 grant privileges: """.format(getpass.getuser()))
                 password = raw_input("Now enter the password for that user: ")
-                db = MySQLdb.connect(user=user,passwd=password,host="127.0.0.1")
+                db = mysql.connector.MySQLConnection(user=user,passwd=password,host="127.0.0.1")
 
         cur = db.cursor()
         self.ensure_section("client")
@@ -259,7 +260,7 @@ class Configfile:
             
         try:
             cur.execute("SET PASSWORD FOR '%s'@'localhost'=PASSWORD('%s')" % (user.strip('"').strip("'"),new_password.strip('"').strip("'")))
-        except MySQLdb.OperationalError, message:	# handle trouble
+        except mysql.connector.errors.OperationalError, message:	# handle trouble
             errorcode = message[0]
             if errorcode==1133:
                 logging.info("creating a new %s user called %s" %(self.usertype,user))
@@ -296,11 +297,11 @@ def change_root_password_if_necessary():
     The root password should not be "root". So we change it if it is.
     """
     try:
-        db = MySQLdb.connect(user="root",passwd="root",host="localhost")
+        db = mysql.connector.MySQLConnection(user="root",passwd="root",host="localhost")
         print "'root' is an insecure root password for MySQL: starting a process to change it. You can just re-enter 'root' if you want."
     except:
         try:
-            db = MySQLdb.connect(user="root",passwd="",host="localhost")
+            db = mysql.connector.MySQLConnection(user="root",passwd="",host="localhost")
             print "Your root MySQL password is blank; starting a process to change it. You can just hit return at the prompts to keep it blank if you want."
         except:
             print "Root mysql password is neither blank nor 'root', so it's up to you to change it."

@@ -1,13 +1,15 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import MySQLdb
+#import MySQLdb
 import re
 import json
 import os
 from variableSet import variableSet
 from variableSet import splitMySQLcode
 from bookwormDB.configuration import Configfile
+import mysql.connector
+#import _mysql_connector
 import logging
 import warnings
 import anydbm
@@ -16,7 +18,7 @@ import anydbm
 
 if logging.getLogger().isEnabledFor(logging.DEBUG):
     # Catch MYSQL warnings as errors if logging is set to debug.
-    warnings.filterwarnings('error', category=MySQLdb.Warning) # For testing
+    warnings.filterwarnings('error', category=mysql.connector.errors.Warning) # For testing
 
 warnings.filterwarnings('ignore', 'Table .* already exists')
 warnings.filterwarnings("ignore", "Can't create database.*; database exists")
@@ -75,18 +77,18 @@ class DB:
         conf.read_config_files()
         connect_args = {
             "user": conf.config.get("client","user"),
-            "passwd": conf.config.get("client","password"),
-            "use_unicode": 'True',
+            "password": conf.config.get("client","password"),
+            "use_unicode": True,
             "charset": 'utf8',
-            "db": '',
-            "local_infile": 1}
+            "database": '',
+            "allow_local_infile": True}
         try:
-            self.conn = MySQLdb.connect(**connect_args)
-        except MySQLdb.OperationalError:
+            self.conn = mysql.connector.MySQLConnection(**connect_args)
+        except mysql.connector.errors.OperationalError:
             # Sometimes mysql wants to connect over this rather than a socket:
             # falling back to it for backward-compatibility.
             connect_args["host"] = "127.0.0.1"
-            self.conn = MySQLdb.connect(**connect_args)
+            self.conn = mysql.connector.MySQLConnection(**connect_args)
             
             
         cursor = self.conn.cursor()
@@ -105,7 +107,7 @@ class DB:
         logging.debug("Connecting to %s" % self.dbname)
         cursor.execute("USE %s" % self.dbname)
 
-    def query(self, sql, silent=False, many_params=None):
+    def query(self, sql, silent=False, many_params=None, multi_commands=False):
         """
         Billy defined a separate query method here so that the common case of a connection being
         timed out doesn't cause the whole shebang to fall apart: instead, it just reboots
@@ -121,6 +123,8 @@ class DB:
             cursor = self.conn.cursor()
             if many_params is not None:
                 cursor.executemany(sql, many_params)
+            elif multi_commands:
+                cursor.execute(sql, multi=multi_commands)
             else:
                 cursor.execute(sql)
         except:
@@ -129,6 +133,8 @@ class DB:
                 cursor = self.conn.cursor()
                 if many_params is not None:
                     cursor.executemany(sql, many_params)
+                elif multi_commands:
+                    cursor.execute(sql, multi=multi_commands)
                 else:
                     cursor.execute(sql)
             except:
@@ -505,7 +511,7 @@ class BookwormSQLDatabase:
         wordCommand += "DROP TABLE IF EXISTS wordsheap;"
         wordCommand += "RENAME TABLE tmp TO wordsheap;"
         query = """INSERT IGNORE INTO masterTableTable
-                   VALUES ('wordsheap','wordsheap','""" + MySQLdb.escape_string(wordCommand) + """')"""
+                   VALUES ('wordsheap','wordsheap','""" + wordCommand + """')"""
         logging.info("Creating wordsheap")
         self.db.query(query)
         

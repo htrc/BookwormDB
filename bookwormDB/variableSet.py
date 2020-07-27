@@ -5,7 +5,8 @@ import json
 import os
 import decimal
 import re
-from MySQLdb import escape_string
+#from MySQLdb import escape_string
+#import _mysql_connector
 import logging
 import subprocess
 
@@ -433,7 +434,7 @@ class dataField:
         (dbname,     name,      type,       tablename,     anchor,      alias,     status,description)
            VALUES
         ('%(field)s','%(field)s','%(type)s','%(finalTable)s','%(anchor)s','%(alias)s','%(status)s','') """ % self.__dict__
-        self.dbToPutIn.query(code)
+        self.dbToPutIn.query(code,multi_commands=True)
         if not self.unique:
             code = self.fastSQLTable()
             try:
@@ -443,7 +444,7 @@ class dataField:
             except:
                 parentTab="fastcat"
             self.dbToPutIn.query('DELETE FROM masterTableTable WHERE masterTableTable.tablename="%s";' % (self.field + "heap"))     
-            self.dbToPutIn.query("INSERT INTO masterTableTable VALUES ('%s','%s','%s')" % (self.field+"heap",parentTab,escape_string(code)))
+            self.dbToPutIn.query("INSERT INTO masterTableTable VALUES ('%s','%s','%s')" % (self.field+"heap",parentTab,code))
         if self.datatype=="categorical":
             #Variable Info
             
@@ -455,11 +456,11 @@ class dataField:
            VALUES
                     ('%(field)s__id','%(field)s','lookup','%(fasttab)s',
                     '%(anchor)s','%(alias)s','hidden','') """ % self.__dict__
-            self.dbToPutIn.query(code)
+            self.dbToPutIn.query(code,multi_commands=True)
             #Separate Table Info
             code = self.fastLookupTableIfNecessary()
             self.dbToPutIn.query('DELETE FROM masterTableTable WHERE masterTableTable.tablename="%s";' %(self.field + "Lookup"))
-            self.dbToPutIn.query("INSERT INTO masterTableTable VALUES ('%s','%s','%s')" % (self.field+"Lookup",self.fasttab,escape_string(code)))
+            self.dbToPutIn.query("INSERT INTO masterTableTable VALUES ('%s','%s','%s')" % (self.field+"Lookup",self.fasttab,code))
 
 # Ugh! This could probably be solved just by putting a lot of backticks in the code!
 
@@ -829,7 +830,7 @@ class variableSet:
                     logging.error("Unable to find a table to join the anchor (%s) against" % self.fastAnchor)
                     raise
             self.db.query('DELETE FROM masterTableTable WHERE masterTableTable.tablename="%s";' %self.fastName)
-            self.db.query("INSERT INTO masterTableTable VALUES ('%s','%s','%s')" % (self.fastName,parentTab,escape_string(fileCommand)))
+            self.db.query("INSERT INTO masterTableTable VALUES ('%s','%s','%s')" % (self.fastName,parentTab,fileCommand))
     
     def createNwordsFile(self):
         """

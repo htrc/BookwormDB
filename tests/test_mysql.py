@@ -3,7 +3,7 @@ import bookwormDB
 import bookwormDB.configuration
 import bookwormDB.CreateDatabase
 import logging
-import MySQLdb
+#import MySQLdb
 import random
 
 logging.basicConfig(level=10)
