@@ -278,7 +278,9 @@ class APIcall(object):
         if "compare_limits" in self.query:
             return self.query['compare_limits']
 
+        logging.debug(self.query)
         search_limits = self.query['search_limits']
+        logging.debug(search_limits)
         compare_limits = deepcopy(search_limits)
 
         asterisked = False
@@ -471,10 +473,12 @@ class APIcall(object):
         elif version >= 2:
             try:
                 # What to do with multiple search_limits
-                
+                logging.debug(type(self.query['search_limits']))
                 if isinstance(self.query['search_limits'], list):
+                    logging.debug(fmt)
+                    logging.debug(version)
                     if fmt == "json" or version >= 3:
-                        frame = self.multi_execute(version = version)
+                        return self.multi_execute(version = version)
                     else:
                         # Only return first search limit if not return in json
                         self.query['search_limits'] = self.query['search_limits'][0]

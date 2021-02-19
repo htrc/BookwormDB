@@ -5,6 +5,7 @@ import logging
 import multiprocessing
 import gunicorn.app.base
 from datetime import datetime
+from cgi import parse_qs
 
 def content_type(query):
     try:
@@ -26,7 +27,7 @@ def content_type(query):
 def application(environ, start_response, logfile = "bookworm_queries.log"):
     # Starting with code from http://wsgi.tutorial.codepoint.net/parsing-the-request-post
     try:
-        request_body_size = int(environ.get('QUERY_STRING', 0))
+        request_body_size = int(environ.get('CONTENT_LENGTH', 0))
     except (ValueError):
         request_body_size = 0
 
@@ -34,7 +35,17 @@ def application(environ, start_response, logfile = "bookworm_queries.log"):
     # in the HTTP request body which is passed by the WSGI server
     # in the file like wsgi.input environment variable.
 
-    q = environ.get('QUERY_STRING')
+    logging.debug(environ.get('REQUEST_METHOD'))
+    if request_body_size > 0:
+        input_stream = environ['wsgi.input'].read(request_body_size)
+        d = parse_qs(input_stream)
+        logging.debug(d)
+        logging.debug(type(d))
+        logging.debug(type(d[b'query'][0]))
+        q = d[b'query'][0].decode("utf-8")
+    else:
+        q = environ.get('QUERY_STRING')
+
     try:
         ip = environ.get('HTTP_X_FORWARDED_FOR')
  #       logging.debug("Request from {}".format(ip))
@@ -55,6 +66,8 @@ def application(environ, start_response, logfile = "bookworm_queries.log"):
 
         
     logging.debug("Received query {}".format(query))
+    logging.debug(query)
+    logging.debug(len(query))
     start = datetime.now()
 
     # Backward-compatability: we used to force query to be
