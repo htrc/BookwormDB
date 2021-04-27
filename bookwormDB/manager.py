@@ -535,19 +535,19 @@ def run_arguments():
 
 
     ########## Clone and run extensions
-    extensions_parser = subparsers.add_parser("query", help="Run a query using the Bookworm API")
-    extensions_parser.add_argument("APIcall",help="The json-formatted query to be run.")
+    query_parser = subparsers.add_parser("query", help="Run a query using the Bookworm API")
+    query_parser.add_argument("APIcall",help="The json-formatted query to be run.")
 
 
     ########## Build components
-    extensions_parser = subparsers.add_parser("prep", help="Build individual components.", aliases = ['build'])
-    extensions_subparsers = extensions_parser.add_subparsers(title="goal", help="The name of the target.", dest="goal")
+    prep_parser = subparsers.add_parser("prep", help="Build individual components.", aliases = ['build'])
+    prep_subparsers = prep_parser.add_subparsers(title="goal", help="The name of the target.", dest="goal")
 
     # Bookworm prep targets that allow additional args
-    catalog_prep_parser = extensions_subparsers.add_parser("preDatabaseMetadata",
+    catalog_prep_parser = prep_subparsers.add_parser("preDatabaseMetadata",
                                                            help=getattr(BookwormManager, "preDatabaseMetadata").__doc__)
 
-    word_ingest_parser = extensions_subparsers.add_parser("database_wordcounts",
+    word_ingest_parser = prep_subparsers.add_parser("database_wordcounts",
                                                            help=getattr(BookwormManager, "database_wordcounts").__doc__)
     word_ingest_parser.add_argument("--no-delete", action="store_true", help="Do not delete and rebuild the token tables. Useful for a partially finished ingest.")
 
@@ -557,9 +557,13 @@ def run_arguments():
 
     word_ingest_parser.add_argument("--index-only", action="store_true", help="Only re-enable keys. Supercedes other flags.")
 
+    metadata_generate_parser = prep_subparsers.add_parser('database_metadata',
+                                                            help=getattr(BookwormManager, "database_metadata").__doc__)
+
     # Bookworm prep targets that don't allow additional args
     for prep_arg in BookwormManager.__dict__.keys():
-        extensions_subparsers.add_parser(prep_arg, help=getattr(BookwormManager, prep_arg).__doc__)
+        if prep_arg not in ["preDatabaseMetadata", "database_wordcounts", "database_metadata"]:
+            prep_subparsers.add_parser(prep_arg, help=getattr(BookwormManager, prep_arg).__doc__)
 
     """
     Some special functions

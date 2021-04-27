@@ -5,7 +5,7 @@ import logging
 import multiprocessing
 import gunicorn.app.base
 from datetime import datetime
-from cgi import parse_qs
+from urllib.parse import parse_qs
 
 def content_type(query):
     try:
@@ -104,6 +104,7 @@ def application(environ, start_response, logfile = "bookworm_queries.log"):
         json.dump(query, fout)
         fout.write("\n")
     logging.debug("Writing to log: \n{}\n".format(json.dumps(query)))
+    logging.debug(response_body)
     return [response_body]
 
 # Copied from the gunicorn docs.
