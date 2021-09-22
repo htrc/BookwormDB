@@ -13,9 +13,9 @@ import logging
 import warnings
 from .sqliteKV import KV
 
-#if logging.getLogger().isEnabledFor(logging.DEBUG):
+if logging.getLogger().isEnabledFor(logging.DEBUG):
     # Catch MYSQL warnings as errors if logging is set to debug.
-#    warnings.filterwarnings('error', category=MySQLdb.Warning) # For testing
+    warnings.filterwarnings('error', category=MySQLdb.Warning) # For testing
 
 warnings.filterwarnings('ignore', 'Table .* already exists')
 warnings.filterwarnings("ignore", ".*Can't create database.*; database exists.*")

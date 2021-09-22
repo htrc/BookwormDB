@@ -493,7 +493,7 @@ class Query(object):
                 catlimits[key] = self.limits[key]
 
         if query == "main":
-            ts = set(self.full_query_tables())                
+            ts = set(self.full_query_tables())
             for key in list(catlimits.keys()):
                     logging.debug(key)
                     logging.debug(ts)
