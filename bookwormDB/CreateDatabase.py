@@ -39,16 +39,20 @@ class DB(object):
         conf = Configfile("admin")
         try:
             host = conf.config.get("mysqld", "host")
+            port = int(conf.config.get("mysqld", "port"))
         except NoOptionError:
             host = "localhost"
+            port = 3306
         connect_args = {
             "user": conf.config.get("client", "user"),
             "passwd": conf.config.get("client", "password"),
             "host": host,
+            "port": port,
             "use_unicode": 'True',
             "charset": 'utf8',
             "db": '',
             "local_infile": 1}
+        logging.debug(connect_args)
         try:
             logging.info(connect_args)
             self.conn = MySQLdb.connect(**connect_args)
