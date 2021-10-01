@@ -722,6 +722,8 @@ class variableSet(object):
                         myfield = ''
                     mainfields.append(to_unicode(myfield))
             catalogtext = '%s\n' % '\t'.join(mainfields)
+            logging.debug(catalogtext)
+            logging.debug(catalog)
             try:
                 catalog.write(catalogtext)
             except TypeError:
