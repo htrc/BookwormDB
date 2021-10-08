@@ -410,7 +410,9 @@ section'client'
             if not (newtable and ingest and index):
                 logging.warn("database_wordcounts args not supported for bigrams yet.")
 
+        logging.debug("Creating a database named %s" % self.dbname)
         Bookworm = bookwormDB.CreateDatabase.BookwormSQLDatabase(self.dbname)
+        logging.debug(Bookworm)
         Bookworm.load_word_list()
         Bookworm.create_unigram_book_counts(newtable=newtable, ingest=ingest, index=index, reverse_index=reverse_index)
         Bookworm.create_bigram_book_counts()

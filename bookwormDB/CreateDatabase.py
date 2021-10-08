@@ -196,6 +196,7 @@ class BookwormSQLDatabase(object):
         #self.reloadMemoryTables()
 
     def create_database(self):
+        logging.debug("Creating database")
         dbname = self.dbname
         dbuser = self.dbuser
         dbpassword = self.dbpassword
@@ -208,6 +209,8 @@ class BookwormSQLDatabase(object):
         except:
             logging.info("Database %s already exists: that might be intentional, so not dying" % dbname)
 
+        logging.debug("Created database %s" % dbname)
+
         "Setting up permissions for web user..."
         db.query("GRANT SELECT ON " + dbname + ".*" + " TO '" + dbuser + "'@'localhost' IDENTIFIED BY '" + dbpassword + "'")
         db.query("GRANT SELECT ON {}.* TO 'bookworm'@'localhost'".format(dbname))        
@@ -217,6 +220,7 @@ class BookwormSQLDatabase(object):
 
     def load_word_list(self):
         db = self.db
+        logging.debug(db)
         logging.info("Making a SQL table to hold the words")
         db.query("""DROP TABLE IF EXISTS words""")
         db.query("""CREATE TABLE IF NOT EXISTS words (
