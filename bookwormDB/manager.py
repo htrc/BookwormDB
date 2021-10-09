@@ -47,6 +47,7 @@ section'client'
             if self.basedir==None:
                 logging.debug("No bookworm directory found; hopefully this isn't a build call.")
 
+        logging.debug("Initializing BookwormManager with %s" % cnf_file)
         if cnf_file is not None:
             config = configparser.ConfigParser(allow_no_value=True)
             config.read([cnf_file])
@@ -612,6 +613,8 @@ def run_arguments():
     logging.info("Debug logging enabled.")
 
     # Create the bookworm
+    logging.debug(args.configuration)
+    logging.debug(args.database)
     my_bookworm = BookwormManager(args.configuration, args.database)
 
     # Call the current action with the arguments passed in.
