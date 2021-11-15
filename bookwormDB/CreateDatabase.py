@@ -520,7 +520,7 @@ class BookwormSQLDatabase(object):
                    ('fastcat','fastcat','{}')""".format(code))
 
 
-    def wordsheap_creation_SQL(self,engine="MEMORY",max_word_length=30,max_words = 1500000):
+    def wordsheap_creation_SQL(self,engine="MEMORY",max_word_length=46,max_words = 8271555):
         tbname = "wordsheap"
         if engine=="MYISAM":
             tbname = "wordsheap_"
@@ -534,7 +534,7 @@ class BookwormSQLDatabase(object):
         wordCommand += "RENAME TABLE tmp TO {};".format(tbname)
         return wordCommand
 
-    def addWordsToMasterVariableTable(self, max_word_length = 30, max_words = 1500000):
+    def addWordsToMasterVariableTable(self, max_word_length = 46, max_words = 8271555):
         """
 
         """

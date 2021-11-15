@@ -52,6 +52,7 @@ section'client'
             config = configparser.ConfigParser(allow_no_value=True)
             config.read([cnf_file])
             if config.has_section("client"):
+                logging.debug(config.items("client"))
                 """
                 Silently go along if the config doesn't exist.
                 """
@@ -59,6 +60,7 @@ section'client'
                     self.dbname = config.get("client", "database")
                 except configParser.NoOptionError:
                     pass
+            logging.debug("If there isn't a list of configs above this, then the parser failed to read the file correctly")
 
         # More specific options override the config file
         if database is not None:
@@ -166,7 +168,7 @@ section'client'
             shutil.copy(API, base_cgi_dir)
 
         if not os.path.exists(d3_dir):
-            call(["git","clone","http://github.com/bmschmidt/BookwormD3",d3_dir])
+            call(["git","clone","http://github.com/htrc/BookwormD3",d3_dir])
 
         # Use the Makefile to build the linechartGUI. This is a little Rube Goldberg-y.
         args.target="linechartGUI"
