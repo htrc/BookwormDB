@@ -49,7 +49,10 @@ class DbConnect(object):
         elif "HOST" in prefs:
             connargs['host'] = prefs['HOST']
         else:
-            host = "localhost"
+            try:
+                connargs['host'] = conf.get("client", "host")
+            except:
+                connargs['host'] = "localhost"
             
         try:
             self.db = MySQLdb.connect(**connargs)

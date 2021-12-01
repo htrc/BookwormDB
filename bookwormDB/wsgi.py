@@ -136,7 +136,7 @@ def run(port = 10012, workers = number_of_workers()):
         workers = number_of_workers()
         
     options = {
-        'bind': '{}:{}'.format('127.0.0.1', port),
+        'bind': '{}:{}'.format('0.0.0.0', port),
         'workers': workers,
     }
     

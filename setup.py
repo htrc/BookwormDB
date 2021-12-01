@@ -34,7 +34,7 @@ setup(
         "Topic :: Text Processing :: Indexing",
         "Topic :: Text Processing :: Linguistic"
     ],
-    install_requires=["numpy","pandas","mysqlclient",
+    install_requires=["numpy","pandas","mysqlclient==2.0.3",
                       "python-dateutil", "psutil", "bounter",
                       "gunicorn"
     ]
