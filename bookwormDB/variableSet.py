@@ -77,7 +77,7 @@ class dataField(object):
     faster joins on the main database
     """
 
-    def __init__(self, definition, dbToPutIn, anchorType="MEDIUMINT UNSIGNED", anchor="bookid",table="catalog",fasttab="fastcat"):
+    def __init__(self, definition, dbToPutIn, anchorType="INT UNSIGNED", anchor="bookid",table="catalog",fasttab="fastcat"):
         #anchorType should be derived from somewhere.
         self.anchorType = anchorType
         self.anchor = anchor
@@ -362,7 +362,7 @@ class dataField(object):
 
         returnt += """CREATE TABLE IF NOT EXISTS %(field)s__id (
                       %(field)s__id %(intType)s PRIMARY KEY AUTO_INCREMENT,
-                      %(field)s VARCHAR (255), INDEX (%(field)s, %(field)s__id), %(field)s__count MEDIUMINT UNSIGNED);\n\n""" % self.__dict__
+                      %(field)s VARCHAR (255), INDEX (%(field)s, %(field)s__id), %(field)s__count INT UNSIGNED);\n\n""" % self.__dict__
 
         returnt += """INSERT INTO %(field)s__id (%(field)s,%(field)s__count)
                       SELECT %(field)s,count FROM tmp LEFT JOIN %(field)s__id USING (%(field)s) WHERE %(field)s__id.%(field)s__id IS NULL
@@ -765,9 +765,9 @@ class variableSet(object):
 
         if self.tableName=="catalog":
             """A few necessary basic fields"""
-            mysqlfields = ["bookid MEDIUMINT UNSIGNED, PRIMARY KEY(bookid)", "filename VARCHAR(255)", "nwords INT"]
+            mysqlfields = ["bookid INT UNSIGNED, PRIMARY KEY(bookid)", "filename VARCHAR(255)", "nwords INT"]
         else:
-            mysqlfields = ["%s MEDIUMINT UNSIGNED, PRIMARY KEY (%s)" % (self.fastAnchor,self.fastAnchor)]
+            mysqlfields = ["%s INT UNSIGNED, PRIMARY KEY (%s)" % (self.fastAnchor,self.fastAnchor)]
         for variable in self.uniques():
             createstring = variable.slowSQL(withIndex=True)
             mysqlfields.append(createstring)
@@ -829,7 +829,7 @@ class variableSet(object):
 
     def uniqueVariableFastSetup(self,engine="MEMORY"):
         fileCommand = "DROP TABLE IF EXISTS tmp;"
-        fileCommand += "CREATE TABLE tmp ({} MEDIUMINT UNSIGNED, PRIMARY KEY  ({}), ".format(
+        fileCommand += "CREATE TABLE tmp ({} INT UNSIGNED, PRIMARY KEY  ({}), ".format(
             self.fastAnchor,self.fastAnchor
             )
         fileCommand += ",\n".join([variable.fastSQL() for variable in self.variables if (variable.unique and variable.fastSQL() is not None)])
@@ -885,7 +885,7 @@ class variableSet(object):
         """
         db = self.db
 
-        db.query("CREATE TABLE IF NOT EXISTS nwords (bookid MEDIUMINT UNSIGNED, PRIMARY KEY (bookid), nwords INT);")
+        db.query("CREATE TABLE IF NOT EXISTS nwords (bookid INT UNSIGNED, PRIMARY KEY (bookid), nwords INT);")
         db.query("UPDATE catalog JOIN nwords USING (bookid) SET catalog.nwords = nwords.nwords")
         db.query("INSERT INTO nwords (bookid,nwords) SELECT catalog.bookid,sum(count) FROM catalog LEFT JOIN nwords USING (bookid) JOIN master_bookcounts USING (bookid) WHERE nwords.bookid IS NULL GROUP BY catalog.bookid")
         db.query("UPDATE catalog JOIN nwords USING (bookid) SET catalog.nwords = nwords.nwords")
