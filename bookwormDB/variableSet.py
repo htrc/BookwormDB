@@ -765,7 +765,7 @@ class variableSet(object):
 
         if self.tableName=="catalog":
             """A few necessary basic fields"""
-            mysqlfields = ["bookid INT UNSIGNED, PRIMARY KEY(bookid)", "filename VARCHAR(255)", "nwords INT"]
+            mysqlfields = ["bookid MEDIUMINT UNSIGNED, PRIMARY KEY(bookid)", "filename VARCHAR(255)", "nwords INT"]
         else:
             mysqlfields = ["%s INT UNSIGNED, PRIMARY KEY (%s)" % (self.fastAnchor,self.fastAnchor)]
         for variable in self.uniques():
@@ -885,7 +885,7 @@ class variableSet(object):
         """
         db = self.db
 
-        db.query("CREATE TABLE IF NOT EXISTS nwords (bookid INT UNSIGNED, PRIMARY KEY (bookid), nwords INT);")
+        db.query("CREATE TABLE IF NOT EXISTS nwords (bookid MEDIUMINT UNSIGNED, PRIMARY KEY (bookid), nwords INT);")
         db.query("UPDATE catalog JOIN nwords USING (bookid) SET catalog.nwords = nwords.nwords")
         db.query("INSERT INTO nwords (bookid,nwords) SELECT catalog.bookid,sum(count) FROM catalog LEFT JOIN nwords USING (bookid) JOIN master_bookcounts USING (bookid) WHERE nwords.bookid IS NULL GROUP BY catalog.bookid")
         db.query("UPDATE catalog JOIN nwords USING (bookid) SET catalog.nwords = nwords.nwords")
