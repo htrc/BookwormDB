@@ -138,6 +138,7 @@ def run(port = 10012, workers = number_of_workers()):
     options = {
         'bind': '{}:{}'.format('0.0.0.0', port),
         'workers': workers,
+        'timeout': 90,
     }
     
     StandaloneApplication(application, options).run()
