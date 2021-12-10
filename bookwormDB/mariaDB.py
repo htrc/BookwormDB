@@ -434,9 +434,9 @@ class Query(object):
         
         dicto['catwhere'] = self.make_catwhere("main")
         
-        logging.info("'{}'".format(dicto['wordid_where']))
-        logging.info("'{}'".format(dicto['catwhere']))
-        if dicto['wordid_where'] == 'TRUE' and dicto['catwhere'] == 'TRUE':
+        logging.info("'{}'".format(dicto['wordid_where'].strip()))
+        logging.info("'{}'".format(dicto['catwhere'].strip()))
+        if dicto['wordid_where'].strip() == 'TRUE' and dicto['catwhere'].strip() == 'TRUE':
             dicto['catwhere'] = self.catwhere
             logging.info("'{}'".format(dicto['tables']))
             basic_query = """
