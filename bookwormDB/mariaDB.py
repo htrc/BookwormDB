@@ -438,6 +438,7 @@ class Query(object):
         logging.info("'{}'".format(dicto['catwhere'].strip()))
         if dicto['wordid_where'].strip() == 'TRUE' and dicto['catwhere'].strip() == 'TRUE':
             dicto['catwhere'] = self.catwhere
+            dicto['tables'] = self.catalog
             logging.info("'{}'".format(dicto['tables']))
             basic_query = """
             SELECT {op} {finalGroups}
