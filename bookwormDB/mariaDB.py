@@ -434,16 +434,27 @@ class Query(object):
         
         dicto['catwhere'] = self.make_catwhere("main")
         
-        basic_query = """
-        SELECT {op} {finalGroups}
-        FROM {tables}
-        WHERE
-          {bookid_where}
-          AND 
-          {wordid_where}
-          AND {catwhere} 
-        {group_query}
-        """.format(**dicto)
+        if dicto['wordid_where'] == 'TRUE' and dicto['catwhere'] == 'TRUE':
+            dicto['catwhere'] = self.catwhere
+            logging.info("'{}'".format(dicto['tables']))
+            basic_query = """
+            SELECT {op} {finalGroups}
+            FROM {tables}
+            WHERE
+              {catwhere} 
+            {group_query}
+            """.format(**dicto)
+        else:
+            basic_query = """
+            SELECT {op} {finalGroups}
+            FROM {tables}
+            WHERE
+              {bookid_where}
+              AND 
+              {wordid_where}
+              AND {catwhere} 
+            {group_query}
+            """.format(**dicto)
         
         return basic_query
     
