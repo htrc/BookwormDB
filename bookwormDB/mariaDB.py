@@ -448,7 +448,7 @@ class Query(object):
         elif dicto['catwhere'].strip() == 'TRUE':
             dicto['catwhere'] = self.catwhere
             logging.info("'{}'".format(dicto['tables']))
-            dicto['tables'] = self.catalog
+            dicto['tables'] += self.catalog[8:]
             logging.info("'{}'".format(dicto['tables']))
             dicto['wrapper_op'] = "IFNULL(numerator.WordCount,0) as WordCount"
             basic_query = """
