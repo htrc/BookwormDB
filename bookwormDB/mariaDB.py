@@ -433,19 +433,32 @@ class Query(object):
         logging.info("'{}'".format(dicto['tables']))
         
         dicto['catwhere'] = self.make_catwhere("main")
-        
-        logging.info("'{}'".format(dicto['wordid_where'].strip()))
-        logging.info("'{}'".format(dicto['catwhere'].strip()))
+
         if dicto['wordid_where'].strip() == 'TRUE' and dicto['catwhere'].strip() == 'TRUE':
             dicto['catwhere'] = self.catwhere
             dicto['tables'] = self.catalog
-            logging.info("'{}'".format(dicto['tables']))
+
             basic_query = """
             SELECT {op} {finalGroups}
             FROM {tables}
             WHERE
               {catwhere} 
             {group_query}
+            """.format(**dicto)
+        elif dicto['catwhere'].strip() == 'TRUE':
+            dicto['catwhere'] = self.catwhere
+            dicto['wrapper_op'] = "IFNULL(numerator.WordCount,0) as WordCount"
+            basic_query = """
+            SELECT {wrapper_op} {finalGroups}
+            FROM (
+            SELECT {op} {finalGroups}
+            FROM {tables}
+            WHERE
+              {catwhere} 
+              AND 
+              {wordid_where}
+            {group_query} )
+            as numerator {group_query}
             """.format(**dicto)
         else:
             basic_query = """
@@ -939,7 +952,7 @@ class databaseSchema(object):
         if tabname in self.fallbacks_cache:
             return self.fallbacks_cache[tabname]
         
-        q = "SELECT COUNT(*) FROM {}".format(tab)
+        q = "SELECT COUNT(1) FROM {}".format(tab)
         logging.debug(q)
         try:
             self.db.cursor.execute(q)
