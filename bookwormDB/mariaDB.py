@@ -446,8 +446,10 @@ class Query(object):
             {group_query}
             """.format(**dicto)
         elif dicto['catwhere'].strip() == 'TRUE':
-            logging.info("'{}'".format(dicto['catwhere']))
             dicto['catwhere'] = self.catwhere
+            logging.info("'{}'".format(dicto['tables']))
+            dicto['tables'] = self.catalog
+            logging.info("'{}'".format(dicto['tables']))
             dicto['wrapper_op'] = "IFNULL(numerator.WordCount,0) as WordCount"
             basic_query = """
             SELECT {wrapper_op} {finalGroups}
