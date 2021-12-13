@@ -719,7 +719,7 @@ class Query(object):
 
     def bookid_query(self):
         
-        q = "SELECT bookid FROM {catalog} WHERE {catwhere}""".format(**self.__dict__)
+        q = "SELECT bookid FROM {catalog} WHERE {catwhere} AND (bookid < 16777215)""".format(**self.__dict__)
 
         logging.debug("'{}'".format(self.catwhere))
         
