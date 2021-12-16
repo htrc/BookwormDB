@@ -447,25 +447,30 @@ class Query(object):
               {catwhere} 
             {group_query}
             """.format(**dicto)
-#        elif dicto['catwhere'].strip() == 'TRUE':
-#            logging.info("Running query with wordid")
-#            dicto['catwhere'] = self.catwhere
-#            logging.info("'{}'".format(dicto['tables']))
-#            dicto['tables'] += self.catalog[8:]
-#            logging.info("'{}'".format(dicto['tables']))
-#            dicto['wrapper_op'] = "IFNULL(numerator.WordCount,0) as WordCount"
-#            basic_query = """
-#            SELECT {wrapper_op} {finalGroups}
-#            FROM (
-#            SELECT {op} {finalGroups}
-#            FROM {tables}
-#            WHERE
-#              {catwhere} 
-#              AND 
-#              {wordid_where}
-#            {group_query} )
-#            as numerator {group_query}
-#            """.format(**dicto)
+        elif dicto['catwhere'].strip() == 'TRUE':
+            logging.info("Running query with wordid")
+            dicto['catwhere'] = self.catwhere
+            logging.info("'{}'".format(dicto['tables']))
+            dicto['tables'] += self.catalog[8:]
+            logging.info("'{}'".format(dicto['tables']))
+
+            if "TextCount" in self.query_object['counttype']:
+                dicto['wrapper_op'] = "IFNULL(numerator.TextCount,0) as TextCount"
+            if "WordCount" in self.query_object['counttype']:
+                dicto['wrapper_op'] = "IFNULL(numerator.WordCount,0) as WordCount"
+
+            basic_query = """
+            SELECT {wrapper_op} {finalGroups}
+            FROM (
+            SELECT {op} {finalGroups}
+            FROM {tables}
+            WHERE
+              {catwhere} 
+              AND 
+              {wordid_where}
+            {group_query} )
+            as numerator {group_query}
+            """.format(**dicto)
         else:
             logging.info("Running default query")
             basic_query = """
