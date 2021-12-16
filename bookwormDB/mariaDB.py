@@ -465,18 +465,18 @@ class Query(object):
 #            {group_query} )
 #            as numerator {group_query}
 #            """.format(**dicto)
-        else:
-            logging.info("Running default query")
-            basic_query = """
-            SELECT {op} {finalGroups}
-            FROM {tables}
-            WHERE
-              {bookid_where}
-              AND 
-              {wordid_where}
-              AND {catwhere} 
-            {group_query}
-            """.format(**dicto)
+#        else:
+        logging.info("Running default query")
+        basic_query = """
+        SELECT {op} {finalGroups}
+        FROM {tables}
+        WHERE
+          {bookid_where}
+          AND 
+          {wordid_where}
+          AND {catwhere} 
+        {group_query}
+        """.format(**dicto)
         
         return basic_query
     
