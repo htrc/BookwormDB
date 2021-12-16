@@ -434,18 +434,18 @@ class Query(object):
         
         dicto['catwhere'] = self.make_catwhere("main")
 
-        if dicto['wordid_where'].strip() == 'TRUE' and dicto['catwhere'].strip() == 'TRUE':
-            logging.info("Running query without wordid")
-            dicto['catwhere'] = self.catwhere
-            dicto['tables'] = self.catalog
-
-            basic_query = """
-            SELECT {op} {finalGroups}
-            FROM {tables}
-            WHERE
-              {catwhere} 
-            {group_query}
-            """.format(**dicto)
+#        if dicto['wordid_where'].strip() == 'TRUE' and dicto['catwhere'].strip() == 'TRUE':
+#            logging.info("Running query without wordid")
+#            dicto['catwhere'] = self.catwhere
+#            dicto['tables'] = self.catalog
+#
+#            basic_query = """
+#            SELECT {op} {finalGroups}
+#            FROM {tables}
+#            WHERE
+#              {catwhere} 
+#            {group_query}
+#            """.format(**dicto)
 #        elif dicto['catwhere'].strip() == 'TRUE':
 #            logging.info("Running query with wordid")
 #            dicto['catwhere'] = self.catwhere
@@ -722,7 +722,7 @@ class Query(object):
 
     def bookid_query(self):
         
-        q = "SELECT bookid FROM {catalog} WHERE {catwhere} AND (bookid < 16777215)""".format(**self.__dict__)
+        q = "SELECT bookid FROM {catalog} WHERE {catwhere}""".format(**self.__dict__)
 
         logging.debug("'{}'".format(self.catwhere))
         
