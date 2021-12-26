@@ -288,7 +288,7 @@ class BookwormSQLDatabase(object):
         reverse_index_sql = "INDEX(bookid,wordid,count), " if reverse_index else ""
         for tablename in tablenames:
             db.query("CREATE TABLE IF NOT EXISTS " + tablename + " ("
-                "bookid MEDIUMINT UNSIGNED NOT NULL, " + reverse_index_sql +
+                "bookid INT UNSIGNED NOT NULL, " + reverse_index_sql +
                 "wordid MEDIUMINT UNSIGNED NOT NULL, INDEX(wordid,bookid,count), "
                 "count MEDIUMINT UNSIGNED NOT NULL);")
 
@@ -381,7 +381,7 @@ class BookwormSQLDatabase(object):
             if table_count > 1:
                 logging.info("Creating a merge table for " + ",".join(tablenames))
                 db.query("CREATE TABLE IF NOT EXISTS " + tablenameroot + " ("
-                    "bookid MEDIUMINT UNSIGNED NOT NULL, " + reverse_index_sql +
+                    "bookid INT UNSIGNED NOT NULL, " + reverse_index_sql +
                     "wordid MEDIUMINT UNSIGNED NOT NULL, INDEX(wordid,bookid,count), "
                     "count MEDIUMINT UNSIGNED NOT NULL) "
                     "ENGINE=MERGE UNION=(" + ",".join(tablenames) + ") INSERT_METHOD=LAST;")
@@ -393,7 +393,7 @@ class BookwormSQLDatabase(object):
         logging.info("Making a SQL table to hold the bigram counts")
         db.query("""DROP TABLE IF EXISTS master_bigrams""")
         db.query("""CREATE TABLE master_bigrams (
-        bookid MEDIUMINT UNSIGNED NOT NULL,
+        bookid INT UNSIGNED NOT NULL,
         word1 MEDIUMINT UNSIGNED NOT NULL, INDEX (word1,word2,bookid,count),
         word2 MEDIUMINT UNSIGNED NOT NULL,
         count MEDIUMINT UNSIGNED NOT NULL);""")
@@ -481,7 +481,7 @@ class BookwormSQLDatabase(object):
             tbname = "fastcat_"
             
         fastFieldsCreateList = [
-            "bookid MEDIUMINT UNSIGNED NOT NULL, PRIMARY KEY (bookid)",
+            "bookid INT UNSIGNED NOT NULL, PRIMARY KEY (bookid)",
             "nwords MEDIUMINT UNSIGNED NOT NULL"
             ]
             
