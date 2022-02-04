@@ -367,6 +367,7 @@ class Query(object):
             
             return [re.sub(" .*","",key) for key in val]
         
+        logging.debug(self.limits)
         return pull_keys(self.limits)
 
     def wordid_query(self):
@@ -508,8 +509,10 @@ class Query(object):
         
         cols = self.needed_columns()
         cols = [c for c in cols if not c in ["word", "word1", "word2"]]
+        logging.debug(cols)
         
         self.relevantTables = self.databaseScheme.tables_for_variables(cols)
+        logging.debug(self.relevantTables)
         
         # moreTables = self.tablesNeededForQuery(columns)
 
