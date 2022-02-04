@@ -451,6 +451,7 @@ class Query(object):
             logging.info("Running query with wordid")
             dicto['catwhere'] = self.catwhere
             logging.info("'{}'".format(dicto['tables']))
+            logging.info("'{}'").format(self.catalog)
             dicto['tables'] += self.catalog[8:]
             logging.info("'{}'".format(dicto['tables']))
 
