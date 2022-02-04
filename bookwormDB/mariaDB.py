@@ -990,6 +990,8 @@ class databaseSchema(object):
 
         logging.debug(variables)
         for variable in variables:
+            logging.debug(variable)
+            logging.debug(self.tableToLookIn)
             lookup_table = self.tableToLookIn[variable]
             if lookup_table in tables:
                 continue
