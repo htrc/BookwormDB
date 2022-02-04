@@ -286,6 +286,7 @@ class Query(object):
 
     def derive_variables(self):
         # These are locally useful, and depend on the search limits put in.
+        logging.debug(self.search_limits)
         self.limits = self.search_limits
         
         # Treat empty constraints as nothing at all, not as restricting to the set of nothing.
@@ -994,6 +995,7 @@ class databaseSchema(object):
             while True:
                 logging.debug(tables)
                 anchor = self.fallback_table(self.anchorFields[lookup_table])
+                logging.debug(anchor)
                 if anchor in tables:
                     break
                 else:
