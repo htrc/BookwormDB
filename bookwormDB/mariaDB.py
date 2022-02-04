@@ -408,6 +408,7 @@ class Query(object):
 
 
         cols = self.query_object['groups']
+        logging.debug(cols)
         ts = self.databaseScheme.tables_for_variables(cols)
 
         for t in ts:
@@ -987,6 +988,7 @@ class databaseSchema(object):
     def tables_for_variables(self, variables, tables = []):
         tables = []
 
+        logging.debug(variables)
         for variable in variables:
             lookup_table = self.tableToLookIn[variable]
             if lookup_table in tables:
