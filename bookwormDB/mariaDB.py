@@ -452,9 +452,8 @@ class Query(object):
             dicto['catwhere'] = self.catwhere
             logging.info("'{}'".format(dicto['tables']))
             logging.info(self.catalog is not None)
-            if self.catalog is not None:
-                logging.info(self.catalog)
-                dicto['tables'] += self.catalog[8:]
+            logging.info(self.catalog)
+            dicto['tables'] += self.catalog[8:]
             logging.info("'{}'".format(dicto['tables']))
 
             if "TextCount" in self.query_object['counttype']:
