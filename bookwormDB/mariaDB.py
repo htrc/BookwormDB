@@ -144,7 +144,7 @@ class Query(object):
         logging.info("Catalog set to {}".format(self.fastcat))
         self.words = "words"
 
-        logging.debug(self.search_limits)
+        logging.debug(self)
         self.defaults(query_object) # Take some defaults
         logging.debug(self.search_limits)
         
