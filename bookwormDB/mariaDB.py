@@ -992,6 +992,7 @@ class databaseSchema(object):
                 continue
             tables.append(lookup_table)
             while True:
+                logging.debug(tables)
                 anchor = self.fallback_table(self.anchorFields[lookup_table])
                 if anchor in tables:
                     break
