@@ -144,7 +144,7 @@ class Query(object):
         logging.info("Catalog set to {}".format(self.fastcat))
         self.words = "words"
 
-        logging.debug(self)
+        logging.debug(query_object)
         self.defaults(query_object) # Take some defaults
         logging.debug(self.search_limits)
         
@@ -175,6 +175,7 @@ class Query(object):
         self.outerGroups = []
         self.finalMergeTables = set()
 
+        logging.debug(query_object['groups'])
         try:
             groups = query_object['groups']
         except:
