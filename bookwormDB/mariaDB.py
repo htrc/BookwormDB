@@ -459,6 +459,13 @@ class Query(object):
             logging.info("'{}'".format(dicto['tables']))
             logging.info(self.catalog is not None)
             logging.info(self.catalog)
+            tables_set = set(dicto['tables'].split(" NATURAL JOIN "))
+            logging.info(tables_set)
+            catalog_set = set(self.catalog.split(" NATURAL JOIN "))
+            logging.info(catalog_set)
+            difference_list = list(catalog_set - tables_set)
+            logging.info(difference_list)
+            logging.info(" NATURAL JOIN ".join(difference_list.insert(0,dicto['tables'])))
             dicto['tables'] += self.catalog[8:]
             logging.info("'{}'".format(dicto['tables']))
 
