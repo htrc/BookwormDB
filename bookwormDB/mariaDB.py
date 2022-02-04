@@ -144,7 +144,9 @@ class Query(object):
         logging.info("Catalog set to {}".format(self.fastcat))
         self.words = "words"
 
+        logging.debug(self.search_limits)
         self.defaults(query_object) # Take some defaults
+        logging.debug(self.search_limits)
         
         self.derive_variables() # Derive some useful variables that the query will use.
 
@@ -988,18 +990,13 @@ class databaseSchema(object):
     def tables_for_variables(self, variables, tables = []):
         tables = []
 
-        logging.debug(variables)
         for variable in variables:
-            logging.debug(variable)
-            logging.debug(self.tableToLookIn)
             lookup_table = self.tableToLookIn[variable]
             if lookup_table in tables:
                 continue
             tables.append(lookup_table)
             while True:
-                logging.debug(tables)
                 anchor = self.fallback_table(self.anchorFields[lookup_table])
-                logging.debug(anchor)
                 if anchor in tables:
                     break
                 else:
