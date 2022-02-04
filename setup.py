@@ -36,6 +36,6 @@ setup(
     ],
     install_requires=["numpy","pandas","mysqlclient==2.0.3",
                       "python-dateutil", "psutil", "bounter",
-                      "gunicorn"
+                      "gunicorn", "SQLAlchemy"
     ]
 )
