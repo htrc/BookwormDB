@@ -470,7 +470,8 @@ class Query(object):
 #            strings_to_join = difference_list.insert(0,dicto['tables'])
             logging.info(strings_to_join)
             logging.info(" NATURAL JOIN ".join(strings_to_join))
-            dicto['tables'] += self.catalog[8:]
+            dicto['tables'] = " NATURAL JOIN ".join(strings_to_join)
+#            dicto['tables'] += self.catalog[8:]
             logging.info("'{}'".format(dicto['tables']))
 
             if "TextCount" in self.query_object['counttype']:
