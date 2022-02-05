@@ -465,7 +465,9 @@ class Query(object):
             logging.info(catalog_set)
             difference_list = list(catalog_set - tables_set)
             logging.info(difference_list)
-            strings_to_join = difference_list.insert(0,dicto['tables'])
+            logging.info(dicto['tables'])
+            strings_to_join = [dicto['tables']] + difference_list
+#            strings_to_join = difference_list.insert(0,dicto['tables'])
             logging.info(strings_to_join)
             logging.info(" NATURAL JOIN ".join(strings_to_join))
             dicto['tables'] += self.catalog[8:]
