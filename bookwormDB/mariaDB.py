@@ -454,7 +454,7 @@ class Query(object):
               {catwhere} 
             {group_query}
             """.format(**dicto)
-        elif dicto['catwhere'].strip() == 'TRUE' and !dicto['group_query'].includes(", "):
+        elif dicto['catwhere'].strip() == 'TRUE' and ", " not in dicto['group_query']:
             logging.info("Running query with wordid")
             dicto['catwhere'] = self.catwhere
             logging.info("'{}'".format(dicto['tables']))
