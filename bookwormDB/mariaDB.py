@@ -444,8 +444,11 @@ class Query(object):
         if dicto['wordid_where'].strip() == 'TRUE' and dicto['catwhere'].strip() == 'TRUE':
             logging.info("Running query without wordid")
             dicto['catwhere'] = self.catwhere
-            if "mainauthor__id" not in self.query_object["groups"]:
-                dicto['tables'] = self.catalog
+            logging.info(self.query_object["groups"])
+            logging.info(self.catalog)
+#            if "mainauthor__id" not in self.query_object["groups"]:
+#                dicto['tables'] = self.catalog
+            logging.info("'{}'".format(dicto['tables']))
 
             logging.info("'{}'".format(dicto['group_query']))
             if len(dicto['group_query'].strip()) > 0:
