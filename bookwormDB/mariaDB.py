@@ -500,6 +500,9 @@ class Query(object):
             confirmed_groups = []
             potential_groups = dicto['group_query'].split(", ")
             for potential_group in potential_groups:
+                logging.info(potential_group)
+                logging.info(potential_group[:-4])
+                logging.info(dicto['finalGroups'])
                 if potential_group not in dicto['finalGroups'] and potential_group[:-4] in dicto['finalGroups']:
                     confirmed_groups.append(potential_group[:-4])
                 else:
