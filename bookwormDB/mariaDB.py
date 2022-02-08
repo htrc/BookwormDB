@@ -479,6 +479,9 @@ class Query(object):
             if "WordCount" in self.query_object['counttype']:
                 dicto['wrapper_op'] = "IFNULL(numerator.WordCount,0) as WordCount"
 
+            dicto['join_query'] = self.joinSuffix
+            logging.info("'{}'".format(dicto['join_query']))
+
             basic_query = """
             SELECT {wrapper_op} {finalGroups}
             FROM (
@@ -489,7 +492,7 @@ class Query(object):
               AND 
               {wordid_where}
             {group_query} )
-            as numerator {group_query}
+            as numerator {join_query} {group_query}
             """.format(**dicto)
         else:
             logging.info("Running default query")
