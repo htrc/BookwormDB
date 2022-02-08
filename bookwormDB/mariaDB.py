@@ -448,18 +448,19 @@ class Query(object):
                 dicto['tables'] = self.catalog
 
             logging.info("'{}'".format(dicto['group_query']))
-            confirmed_groups = []
-            potential_groups = dicto['group_query'][9:].split(", ")
-            for potential_group in potential_groups:
-                logging.info(potential_group)
-                logging.info(potential_group[:-4])
-                logging.info(dicto['finalGroups'])
-                if potential_group not in dicto['finalGroups'] and potential_group[:-4] in dicto['finalGroups']:
-                    confirmed_groups.append(potential_group[:-4])
-                else:
-                    confirmed_groups.append(potential_group)
+            if len(dicto['group_query'].strip()) > 0:
+                confirmed_groups = []
+                potential_groups = dicto['group_query'][9:].split(", ")
+                for potential_group in potential_groups:
+                    logging.info(potential_group)
+                    logging.info(potential_group[:-4])
+                    logging.info(dicto['finalGroups'])
+                    if potential_group not in dicto['finalGroups'] and potential_group[:-4] in dicto['finalGroups']:
+                        confirmed_groups.append(potential_group[:-4])
+                    else:
+                        confirmed_groups.append(potential_group)
 
-            dicto['group_query'] = "GROUP BY " + ", ".join(confirmed_groups)
+                dicto['group_query'] = "GROUP BY " + ", ".join(confirmed_groups)
             logging.info("'{}'".format(dicto['group_query']))
 
             basic_query = """
