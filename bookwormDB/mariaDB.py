@@ -497,6 +497,16 @@ class Query(object):
             dicto['join_query'] = self.joinSuffix
             logging.info("'{}'".format(dicto['join_query']))
 
+            confirmed_groups = []
+            potential_groups = dicto['group_query'].split(", ")
+            for potential_group in potential_groups:
+                if potential_group not in dicto['finalGroups'] and potential_group[:-4] in dicto['finalGroups']:
+                    confirmed_groups.append(potential_group[:-4])
+                else:
+                    confirmed_groups.append(potential_group)
+
+            dicto['group_query'] = ", ".join(confirmed_groups)
+
             basic_query = """
             SELECT {op} {finalGroups}
             FROM {tables}
@@ -505,7 +515,6 @@ class Query(object):
               AND 
               {wordid_where}
               AND {catwhere}
-            {join_query} 
             {group_query}
             """.format(**dicto)
         else:
