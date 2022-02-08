@@ -439,6 +439,7 @@ class Query(object):
         logging.info("'{}'".format(dicto['tables']))
         
         dicto['catwhere'] = self.make_catwhere("main")
+        logging.info("'{}'".format(dicto))
 
         if dicto['wordid_where'].strip() == 'TRUE' and dicto['catwhere'].strip() == 'TRUE':
             logging.info("Running query without wordid")
@@ -492,7 +493,7 @@ class Query(object):
               AND 
               {wordid_where}
             {group_query} )
-            as numerator {join_query} {group_query}
+            as numerator {group_query}
             """.format(**dicto)
         else:
             logging.info("Running default query")
