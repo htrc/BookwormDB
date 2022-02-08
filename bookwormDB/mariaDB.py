@@ -480,9 +480,6 @@ class Query(object):
             if "WordCount" in self.query_object['counttype']:
                 dicto['wrapper_op'] = "IFNULL(numerator.WordCount,0) as WordCount"
 
-            dicto['join_query'] = self.joinSuffix
-            logging.info("'{}'".format(dicto['join_query']))
-
             basic_query = """
             SELECT {wrapper_op} {finalGroups}
             FROM (
@@ -494,6 +491,22 @@ class Query(object):
               {wordid_where}
             {group_query} )
             as numerator {group_query}
+            """.format(**dicto)
+        elif dicto['catwhere'].strip() == 'TRUE' and ", " in dicto['group_query']:
+            logging.info("Running query with wordid and multiple groups")
+            dicto['join_query'] = self.joinSuffix
+            logging.info("'{}'".format(dicto['join_query']))
+
+            basic_query = """
+            SELECT {op} {finalGroups}
+            FROM {tables}
+            WHERE
+              {bookid_where}
+              AND 
+              {wordid_where}
+              AND {catwhere}
+            {join_query} 
+            {group_query}
             """.format(**dicto)
         else:
             logging.info("Running default query")
