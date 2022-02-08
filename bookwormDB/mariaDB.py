@@ -447,6 +447,7 @@ class Query(object):
             if "mainauthor__id" not in self.query_object["groups"]:
                 dicto['tables'] = self.catalog
 
+            logging.info("'{}'".format(dicto['group_query']))
             confirmed_groups = []
             potential_groups = dicto['group_query'][9:].split(", ")
             for potential_group in potential_groups:
@@ -459,6 +460,7 @@ class Query(object):
                     confirmed_groups.append(potential_group)
 
             dicto['group_query'] = "GROUP BY " + ", ".join(confirmed_groups)
+            logging.info("'{}'".format(dicto['group_query']))
 
             basic_query = """
             SELECT {op} {finalGroups}
