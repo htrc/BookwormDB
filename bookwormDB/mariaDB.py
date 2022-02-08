@@ -447,6 +447,19 @@ class Query(object):
             if "mainauthor__id" not in self.query_object["groups"]:
                 dicto['tables'] = self.catalog
 
+            confirmed_groups = []
+            potential_groups = dicto['group_query'][9:].split(", ")
+            for potential_group in potential_groups:
+                logging.info(potential_group)
+                logging.info(potential_group[:-4])
+                logging.info(dicto['finalGroups'])
+                if potential_group not in dicto['finalGroups'] and potential_group[:-4] in dicto['finalGroups']:
+                    confirmed_groups.append(potential_group[:-4])
+                else:
+                    confirmed_groups.append(potential_group)
+
+            dicto['group_query'] = "GROUP BY " + ", ".join(confirmed_groups)
+
             basic_query = """
             SELECT {op} {finalGroups}
             FROM {tables}
@@ -496,19 +509,6 @@ class Query(object):
             logging.info("Running query with wordid and multiple groups")
             dicto['join_query'] = self.joinSuffix
             logging.info("'{}'".format(dicto['join_query']))
-
-            confirmed_groups = []
-            potential_groups = dicto['group_query'].split(", ")
-            for potential_group in potential_groups:
-                logging.info(potential_group)
-                logging.info(potential_group[:-4])
-                logging.info(dicto['finalGroups'])
-                if potential_group not in dicto['finalGroups'] and potential_group[:-4] in dicto['finalGroups']:
-                    confirmed_groups.append(potential_group[:-4])
-                else:
-                    confirmed_groups.append(potential_group)
-
-            dicto['group_query'] = ", ".join(confirmed_groups)
 
             basic_query = """
             SELECT {op} {finalGroups}
