@@ -487,8 +487,10 @@ class Query(object):
             logging.info(self.catalog)
             tables_set = set(dicto['tables'].split(" NATURAL JOIN "))
             logging.info(tables_set)
+            logging.info(len(tables_set))
             catalog_set = set(self.catalog.split(" NATURAL JOIN "))
             logging.info(catalog_set)
+            logging.info(len(catalog_set))
             difference_set = catalog_set - tables_set            
             if len(difference_set) > 0:
                 difference_list = list(catalog_set - tables_set)
