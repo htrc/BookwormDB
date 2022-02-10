@@ -463,10 +463,10 @@ class Query(object):
                     else:
                         confirmed_groups.append(potential_group)
 
-                for confirmed_group in confirmed_groups:
-                    if confirmed_group != 'date_year':
-                        if confirmed_group + "heap_" in dicto['tables'] and confirmed_group + "Lookup_" not in dicto['tables']:
-                            dicto['tables'] += " NATURAL JOIN " + confirmed_group + "Lookup_"
+#                for confirmed_group in confirmed_groups:
+#                    if confirmed_group != 'date_year':
+#                        if confirmed_group + "heap_" in dicto['tables'] and confirmed_group + "Lookup_" not in dicto['tables']:
+#                            dicto['tables'] += " NATURAL JOIN " + confirmed_group + "Lookup_"
 
                 dicto['group_query'] = "GROUP BY " + ", ".join(confirmed_groups)
             logging.info("'{}'".format(dicto['group_query']))
