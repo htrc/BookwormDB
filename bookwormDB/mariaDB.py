@@ -517,6 +517,25 @@ class Query(object):
             if "WordCount" in self.query_object['counttype']:
                 dicto['wrapper_op'] = "IFNULL(numerator.WordCount,0) as WordCount"
 
+            if len(dicto['group_query'].strip()) > 0:
+                confirmed_groups = []
+                potential_groups = dicto['group_query'][9:].split(", ")
+                for potential_group in potential_groups:
+                    logging.info(potential_group)
+                    logging.info(potential_group[:-4])
+                    logging.info(dicto['finalGroups'])
+                    if potential_group not in dicto['finalGroups'] and potential_group[:-4] in dicto['finalGroups']:
+                        confirmed_groups.append(potential_group[:-4])
+                    else:
+                        confirmed_groups.append(potential_group)
+
+                for confirmed_group in confirmed_groups:
+                    if confirmed_group != 'date_year':
+                        if confirmed_group + "heap_" in dicto['tables'] and confirmed_group + "Lookup_" not in dicto['tables']:
+                            dicto['tables'] += " NATURAL JOIN " + confirmed_group + "Lookup_"
+
+                dicto['group_query'] = "GROUP BY " + ", ".join(confirmed_groups)
+
             basic_query = """
             SELECT {wrapper_op} {finalGroups}
             FROM (
