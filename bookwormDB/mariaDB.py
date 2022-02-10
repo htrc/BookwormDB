@@ -486,7 +486,7 @@ class Query(object):
             logging.info(self.catalog is not None)
             logging.info(self.catalog)
             split_tables = dicto['tables'].split(" NATURAL JOIN ")
-            if len(split_tables) > 0:
+            if split_tables != ['']:
                 tables_set = set(split_tables)
             else:
                 tables_set = set()
@@ -494,7 +494,7 @@ class Query(object):
             logging.info(len(tables_set))
             split_catalog = self.catalog.split(" NATURAL JOIN ")
             logging.info(len(split_catalog))
-            if len(split_catalog) > 0:
+            if split_catalog != ['']:
                 catalog_set = set(split_catalog)
             else:
                 split_catalog = set()
