@@ -497,7 +497,7 @@ class Query(object):
             if split_catalog != ['']:
                 catalog_set = set(split_catalog)
             else:
-                split_catalog = set()
+                catalog_set = set()
             logging.info(catalog_set)
             logging.info(len(catalog_set))
             difference_set = catalog_set - tables_set            
