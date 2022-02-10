@@ -489,15 +489,16 @@ class Query(object):
             logging.info(tables_set)
             catalog_set = set(self.catalog.split(" NATURAL JOIN "))
             logging.info(catalog_set)
-            difference_list = list(catalog_set - tables_set)
-            logging.info(difference_list)
-            logging.info(dicto['tables'])
-            strings_to_join = [dicto['tables']] + difference_list
-#            strings_to_join = difference_list.insert(0,dicto['tables'])
-            logging.info(strings_to_join)
-            logging.info(" NATURAL JOIN ".join(strings_to_join))
-            dicto['tables'] = " NATURAL JOIN ".join(strings_to_join)
-#            dicto['tables'] += self.catalog[8:]
+            difference_set = catalog_set - tables_set            
+            if len(difference_set) > 0:
+                difference_list = list(catalog_set - tables_set)
+                logging.info(difference_list)
+                logging.info(dicto['tables'])
+                strings_to_join = [dicto['tables']] + difference_list
+                logging.info(strings_to_join)
+                logging.info(" NATURAL JOIN ".join(strings_to_join))
+                dicto['tables'] = " NATURAL JOIN ".join(strings_to_join)
+
             logging.info("'{}'".format(dicto['tables']))
 
             if "TextCount" in self.query_object['counttype']:
