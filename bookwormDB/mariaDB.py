@@ -485,10 +485,19 @@ class Query(object):
             logging.info("'{}'".format(dicto['tables']))
             logging.info(self.catalog is not None)
             logging.info(self.catalog)
-            tables_set = set(dicto['tables'].split(" NATURAL JOIN "))
+            split_tables = dicto['tables'].split(" NATURAL JOIN ")
+            if len(split_tables) > 0:
+                tables_set = set(split_tables)
+            else:
+                tables_set = set()
             logging.info(tables_set)
             logging.info(len(tables_set))
-            catalog_set = set(self.catalog.split(" NATURAL JOIN "))
+            split_catalog = self.catalog.split(" NATURAL JOIN ")
+            logging.info(len(split_catalog))
+            if len(split_catalog) > 0:
+                catalog_set = set(split_catalog)
+            else:
+                split_catalog = set()
             logging.info(catalog_set)
             logging.info(len(catalog_set))
             difference_set = catalog_set - tables_set            
