@@ -517,17 +517,17 @@ class Query(object):
             if "WordCount" in self.query_object['counttype']:
                 dicto['wrapper_op'] = "IFNULL(numerator.WordCount,0) as WordCount"
 
-#            if len(dicto['group_query'].strip()) > 0:
-#                confirmed_groups = []
-#                potential_groups = dicto['group_query'][9:].split(", ")
-#                for potential_group in potential_groups:
-#                    logging.info(potential_group)
-#                    logging.info(potential_group[:-4])
-#                    logging.info(dicto['finalGroups'])
-#                    if potential_group not in dicto['finalGroups'] and potential_group[:-4] in dicto['finalGroups']:
-#                        confirmed_groups.append(potential_group[:-4])
-#                    else:
-#                        confirmed_groups.append(potential_group)
+            if len(dicto['group_query'].strip()) > 0:
+                confirmed_groups = []
+                potential_groups = dicto['group_query'][9:].split(", ")
+                for potential_group in potential_groups:
+                    logging.info(potential_group)
+                    logging.info(potential_group[:-4])
+                    logging.info(dicto['finalGroups'])
+                    if potential_group not in dicto['finalGroups'] and potential_group[:-4] in dicto['finalGroups']:
+                        confirmed_groups.append(potential_group[:-4])
+                    else:
+                        confirmed_groups.append(potential_group)
 
 #                for confirmed_group in confirmed_groups:
 #                    if confirmed_group != 'date_year':
