@@ -534,7 +534,7 @@ class Query(object):
 #                        if confirmed_group + "heap_" in dicto['tables'] and confirmed_group + "Lookup_" not in dicto['tables']:
 #                            dicto['tables'] += " NATURAL JOIN " + confirmed_group + "Lookup_"
 
-#                dicto['group_query'] = "GROUP BY " + ", ".join(confirmed_groups)
+                dicto['group_query'] = "GROUP BY " + ", ".join(confirmed_groups)
 
             basic_query = """
             SELECT {wrapper_op} {finalGroups}
