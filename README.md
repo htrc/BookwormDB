@@ -10,7 +10,7 @@ Installation is tested on Ubuntu and OS X. It may work on other Unixes, but will
 
 1. Install some dependencies; mysql or mariadb for databases.
 2. Download the latest release, either by cloning this git repo or downloading a zip.
-3. Navigate to the folder in the terminal, and type `pip install .`.
+3. Navigate to the folder in the terminal, and type `pip install .`. Hi
 4. Type `bookworm --help` to confirm the executable has worked. If this doesn't work, file
    a bug report.
 5. (No longer?) Type `bookworm config mysql` for some interactive prompts to allow Bookworm to edit MySQL databases on your server. (Note that this makes some other changes to your mysql configuration files; you may want to copy them first if you're using it for other things.)
