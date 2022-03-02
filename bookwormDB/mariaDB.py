@@ -446,7 +446,7 @@ class Query(object):
             dicto['catwhere'] = self.catwhere
             logging.info(self.query_object["groups"])
             logging.info(self.catalog)
-            if "mainauthor__id" not in self.query_object["groups"] and len(self.catalog) > 0:
+            if "mainauthor__id" not in self.query_object["groups"] and 'publication_stateLookup_' not in self.query_object["groups"] and len(self.catalog) > 0:
                 dicto['tables'] = self.catalog
             logging.info("'{}'".format(dicto['tables']))
 
