@@ -465,6 +465,7 @@ class Query(object):
 
                 for confirmed_group in confirmed_groups:
                     if confirmed_group != 'date_year':
+                        logging.debug(confirmed_group)
                         if confirmed_group + "heap_" in dicto['tables'] and confirmed_group + "Lookup_" not in dicto['tables']:
                             dicto['tables'] += " NATURAL JOIN " + confirmed_group + "Lookup_"
 
