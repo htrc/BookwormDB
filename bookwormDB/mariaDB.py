@@ -447,11 +447,13 @@ class Query(object):
             logging.info(self.query_object["groups"])
             logging.info(self.catalog)
 #            if "mainauthor__id" not in self.query_object["groups"] and "publication_state" not in self.query_object["groups"] and len(self.catalog) > 0:
-            if "heap" in dicto['tables'] and len(self.catalog) > 0:
-                dicto['tables'] = self.catalog
-            elif self.catalog == 'fastcat_':
+            if "mainauthor__id" in self.query_object["groups"] or self.catalog == 'fastcat_':
                 pass
-            elif "mainauthor__id" not in self.query_object["groups"] and "publication_state" not in self.query_object["groups"] and len(self.catalog) > 0:
+            elif "heap" in dicto['tables'] and len(self.catalog) > 0:
+                dicto['tables'] = self.catalog
+#            elif self.catalog == 'fastcat_':
+#                pass
+            elif "publication_state" not in self.query_object["groups"] and len(self.catalog) > 0:
                 dicto['tables'] = self.catalog
 
             logging.info("'{}'".format(dicto['tables']))
