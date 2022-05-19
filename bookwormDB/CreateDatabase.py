@@ -288,8 +288,8 @@ class BookwormSQLDatabase(object):
         reverse_index_sql = "INDEX(bookid,wordid,count), " if reverse_index else ""
         for tablename in tablenames:
             db.query("CREATE TABLE IF NOT EXISTS " + tablename + " ("
-                "bookid INT UNSIGNED NOT NULL, " + reverse_index_sql +
                 "wordid MEDIUMINT UNSIGNED NOT NULL, INDEX(wordid,bookid,count), "
+                "bookid INT UNSIGNED NOT NULL, " + reverse_index_sql +
                 "count MEDIUMINT UNSIGNED NOT NULL);")
 
         if ingest:
@@ -306,7 +306,7 @@ class BookwormSQLDatabase(object):
                     tablename = tablenames[i % len(tablenames)]
                     logging.debug("Importing txt file, %s (%d/%d)" % (filename, i, len(files)))
                     try:
-                        db.query("LOAD DATA LOCAL INFILE '" + grampath + "/" + filename + "' INTO TABLE " + tablename +" CHARACTER SET utf8 (bookid,wordid,count);")
+                        db.query("LOAD DATA LOCAL INFILE '" + grampath + "/" + filename + "' INTO TABLE " + tablename +" CHARACTER SET utf8 (wordid,bookid,count);")
                     except KeyboardInterrupt:
                         raise
                     except:
@@ -316,7 +316,7 @@ class BookwormSQLDatabase(object):
                             df = pd.read_csv(grampath + "/" + filename, sep='\t', header=None)
                             to_insert = df.apply(tuple, axis=1).tolist()
                             db.query(
-                                "INSERT INTO " + tablename + " (bookid,wordid,count) "
+                                "INSERT INTO " + tablename + " (wordid,bookid,count) "
                                 "VALUES (%s, %s, %s);""",
                                 many_params=to_insert
                                 )
@@ -360,7 +360,7 @@ class BookwormSQLDatabase(object):
                             path = "%s/%s" % (tmpdir, tmpfile)
                             db.query("LOAD DATA LOCAL INFILE '" + path + "' "
                                      "INTO TABLE " + tablename + " "
-                                     "CHARACTER SET utf8 (bookid,wordid,count);")
+                                     "CHARACTER SET utf8 (wordid,bookid,count);")
                             try:
                                 os.remove(path)
                             except:
@@ -381,8 +381,8 @@ class BookwormSQLDatabase(object):
             if table_count > 1:
                 logging.info("Creating a merge table for " + ",".join(tablenames))
                 db.query("CREATE TABLE IF NOT EXISTS " + tablenameroot + " ("
-                    "bookid INT UNSIGNED NOT NULL, " + reverse_index_sql +
                     "wordid MEDIUMINT UNSIGNED NOT NULL, INDEX(wordid,bookid,count), "
+                    "bookid INT UNSIGNED NOT NULL, " + reverse_index_sql +
                     "count MEDIUMINT UNSIGNED NOT NULL) "
                     "ENGINE=MERGE UNION=(" + ",".join(tablenames) + ") INSERT_METHOD=LAST;")
 
