@@ -545,7 +545,7 @@ def run_arguments():
 
 
     ########## Build components
-    prep_parser = subparsers.add_parser("prep", help="Build individual components.", aliases = ['build'])
+    prep_parser = subparsers.add_parser("prep", help="Build individual components.")
     prep_subparsers = prep_parser.add_subparsers(title="goal", help="The name of the target.", dest="goal")
 
     # Bookworm prep targets that allow additional args
