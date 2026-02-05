@@ -287,16 +287,26 @@ class BookwormSQLDatabase(object):
         logging.info("Making a SQL table to hold the %s" % ngramname)
         reverse_index_sql = "INDEX(bookid,wordid,count), " if reverse_index else ""
         for tablename in tablenames:
+#            db.query("CREATE TABLE IF NOT EXISTS " + tablename + " ("
+#                "wordid MEDIUMINT UNSIGNED NOT NULL, INDEX(wordid,bookid,count), "
+#                "bookid INT UNSIGNED NOT NULL, " + reverse_index_sql +
+#                "count MEDIUMINT UNSIGNED NOT NULL);")
             db.query("CREATE TABLE IF NOT EXISTS " + tablename + " ("
-                "wordid MEDIUMINT UNSIGNED NOT NULL, INDEX(wordid,bookid,count), "
-                "bookid INT UNSIGNED NOT NULL, " + reverse_index_sql +
-                "count MEDIUMINT UNSIGNED NOT NULL);")
+                "wordid MEDIUMINT UNSIGNED NOT NULL, "
+                "bookid INT UNSIGNED NOT NULL, " +
+                "count MEDIUMINT UNSIGNED NOT NULL, PRIMARY KEY (wordid,bookid,count)) ENGINE=InnoDB;")
 
         if ingest:
             for tablename in tablenames:
                 db.query("ALTER TABLE " + tablename + " DISABLE KEYS")
             db.query("set NAMES utf8;")
             db.query("set CHARACTER SET utf8;")
+
+            db.query("SET SESSION unique_checks = 0;")
+            db.query("SET SESSION foreign_key_checks = 0;")
+            db.query("SET SESSION sql_log_bin = 0;")
+            db.query("SET SESSION autocommit = 0;")
+
             logging.info("loading data using LOAD DATA LOCAL INFILE")
             
             files = os.listdir(grampath)
@@ -325,6 +335,10 @@ class BookwormSQLDatabase(object):
                        except:
                            logging.exception("Error inserting %s from %s" % (ngramname, filename))
                            continue
+
+                #We load file ~100MB in size, need to commit every 100 files to keep memory usage under cap
+                if i%100 == 0:
+                    db.query("COMMIT;")
 
                 elif filename.endswith('.h5'):
                     logging.info("Importing h5 file, %s (%d/%d)" % (filename, i, len(files)))
@@ -373,10 +387,19 @@ class BookwormSQLDatabase(object):
                        continue
                 else:
                     continue
+
+            db.query("COMMIT;")
+            db.query("SET SESSION unique_checks = 1;")
+            db.query("SET SESSION foreign_key_checks = 1;")
+            db.query("SET SESSION sql_log_bin = 1;")
+            db.query("SET SESSION autocommit = 1;")
+
         if index:
             logging.info("Creating Unigram Indexes. Time passed: %.2f s" % (time.time() - t0))
             for tablename in tablenames:
-                db.query("ALTER TABLE " + tablename + " ENABLE KEYS")
+#                db.query("ALTER TABLE " + tablename + " ENABLE KEYS")
+                if reverse_index:
+                    db.query("ALTER TABLE " + tablename + "ADD INDEX (bookid,wordid,count);")
 
             if table_count > 1:
                 logging.info("Creating a merge table for " + ",".join(tablenames))
