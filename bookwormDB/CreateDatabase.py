@@ -399,7 +399,7 @@ class BookwormSQLDatabase(object):
             for tablename in tablenames:
 #                db.query("ALTER TABLE " + tablename + " ENABLE KEYS")
                 if reverse_index:
-                    db.query("ALTER TABLE " + tablename + "ADD INDEX (bookid,wordid,count);")
+                    db.query("ALTER TABLE " + tablename + " ADD INDEX (bookid,wordid,count);")
 
             if table_count > 1:
                 logging.info("Creating a merge table for " + ",".join(tablenames))
