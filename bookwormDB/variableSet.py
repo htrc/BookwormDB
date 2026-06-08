@@ -887,10 +887,10 @@ class variableSet(object):
 
         db.query("CREATE TABLE IF NOT EXISTS nwords (bookid INT UNSIGNED, PRIMARY KEY (bookid), nwords INT);")
         db.query("UPDATE catalog JOIN nwords USING (bookid) SET catalog.nwords = nwords.nwords")
-        db.query("CREATE TEMPORARY TABLE temp_counts (bookid INT UNSIGNED, PRIMARY KEY (bookid), total_count INT) ENGINE=MEMORY;")
+        db.query("CREATE TABLE IF NOT EXISTS temp_counts (bookid INT UNSIGNED, PRIMARY KEY (bookid), total_count INT);")
         db.query("INSERT INTO temp_counts (bookid, total_count) SELECT bookid, SUM(count) FROM master_bookcounts GROUP BY bookid;")
         db.query("INSERT INTO nwords (bookid, nwords) SELECT catalog.bookid, temp_counts.total_count FROM catalog LEFT JOIN nwords USING (bookid) JOIN temp_counts USING (bookid) WHERE nwords.bookid IS NULL;")
-        db.query("DROP TEMPORARY TABLE temp_counts;")
+        db.query("DROP TABLE temp_counts;")
 #        db.query("INSERT INTO nwords (bookid,nwords) SELECT catalog.bookid,sum(count) FROM catalog LEFT JOIN nwords USING (bookid) JOIN master_bookcounts USING (bookid) WHERE nwords.bookid IS NULL GROUP BY catalog.bookid")
         db.query("UPDATE catalog JOIN nwords USING (bookid) SET catalog.nwords = nwords.nwords")
 
