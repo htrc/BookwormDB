@@ -885,9 +885,9 @@ class variableSet(object):
         """
         db = self.db
 
-        db.query("CREATE TABLE IF NOT EXISTS nwords (bookid INT UNSIGNED, PRIMARY KEY (bookid), nwords INT);")
+        db.query("CREATE TABLE IF NOT EXISTS nwords (bookid INT UNSIGNED, PRIMARY KEY (bookid), nwords INT UNSIGNED);")
         db.query("UPDATE catalog JOIN nwords USING (bookid) SET catalog.nwords = nwords.nwords")
-        db.query("CREATE TABLE IF NOT EXISTS temp_counts (bookid INT UNSIGNED, PRIMARY KEY (bookid), total_count INT);")
+        db.query("CREATE TABLE IF NOT EXISTS temp_counts (bookid INT UNSIGNED, PRIMARY KEY (bookid), total_count INT UNSIGNED);")
         db.query("INSERT INTO temp_counts (bookid, total_count) SELECT bookid, SUM(count) FROM master_bookcounts GROUP BY bookid;")
         db.query("INSERT INTO nwords (bookid, nwords) SELECT catalog.bookid, temp_counts.total_count FROM catalog LEFT JOIN nwords USING (bookid) JOIN temp_counts USING (bookid) WHERE nwords.bookid IS NULL;")
         db.query("DROP TABLE temp_counts;")
