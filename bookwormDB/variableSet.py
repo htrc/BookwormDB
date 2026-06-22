@@ -36,7 +36,8 @@ def splitMySQLcode(string):
 def guessBasedOnNameAndContents(metadataname,dictionary):
     """
     This makes a guess based on the data field's name and type.
-    CUrrently it assumes everything is categorical; that can really chunk out on some text fields, but works much better for importing csvs. Probably we want to take some other things into account as well.
+    CUrrently it assumes everything is categorical; that can really chunk_size = 10000
+    catalog_size = 18696112 out on some text fields, but works much better for importing csvs. Probably we want to take some other things into account as well.
     """
     description = {"field":metadataname,"datatype":"categorical","type":"character","unique":True}
 
@@ -888,7 +889,13 @@ class variableSet(object):
         db.query("CREATE TABLE IF NOT EXISTS nwords (bookid INT UNSIGNED, PRIMARY KEY (bookid), nwords INT UNSIGNED);")
         db.query("UPDATE catalog JOIN nwords USING (bookid) SET catalog.nwords = nwords.nwords")
         db.query("CREATE TABLE IF NOT EXISTS temp_counts (bookid INT UNSIGNED, PRIMARY KEY (bookid), total_count INT UNSIGNED);")
-        db.query("INSERT INTO temp_counts (bookid, total_count) SELECT bookid, SUM(count) FROM master_bookcounts GROUP BY bookid;")
+        chunk_size = 10000
+        catalog_size = 18696112
+        smallest_bookid = 0
+        while smallest_bookid < catalog_size:
+            logging.debug("Inserting chunk " + str(smallest_bookid) + " to " + str(smallest_bookid + chunk_size))
+            db.query("INSERT INTO temp_counts (bookid, total_count) SELECT bookid, SUM(count) FROM master_bookcounts WHERE bookid >= %s AND bookid < %s GROUP BY bookid;", (smallest_bookid, smallest_bookid + chunk_size))
+            smallest_bookid =+ chunk_size
         db.query("INSERT INTO nwords (bookid, nwords) SELECT catalog.bookid, temp_counts.total_count FROM catalog LEFT JOIN nwords USING (bookid) JOIN temp_counts USING (bookid) WHERE nwords.bookid IS NULL;")
         db.query("DROP TABLE temp_counts;")
 #        db.query("INSERT INTO nwords (bookid,nwords) SELECT catalog.bookid,sum(count) FROM catalog LEFT JOIN nwords USING (bookid) JOIN master_bookcounts USING (bookid) WHERE nwords.bookid IS NULL GROUP BY catalog.bookid")
