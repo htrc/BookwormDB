@@ -889,7 +889,7 @@ class variableSet(object):
         db.query("CREATE TABLE IF NOT EXISTS nwords (bookid INT UNSIGNED, PRIMARY KEY (bookid), nwords BIGINT);")
         db.query("UPDATE catalog JOIN nwords USING (bookid) SET catalog.nwords = nwords.nwords")
         db.query("CREATE TABLE IF NOT EXISTS temp_counts (bookid INT UNSIGNED, PRIMARY KEY (bookid), total_count BIGINT);")
-        chunk_size = 10000
+        chunk_size = 1000
         catalog_size = 18696112
         smallest_bookid = 0
         while smallest_bookid < catalog_size:
