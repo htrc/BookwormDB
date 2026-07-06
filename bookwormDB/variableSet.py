@@ -891,7 +891,7 @@ class variableSet(object):
         db.query("UPDATE catalog JOIN nwords USING (bookid) SET catalog.nwords = nwords.nwords")
         db.query("CREATE TABLE IF NOT EXISTS temp_counts (bookid INT UNSIGNED, PRIMARY KEY (bookid), total_count BIGINT);")
         db.query("SET SESSION transaction_isolation = 'READ-COMMITTED';")
-        chunk_size = 100
+        chunk_size = 100000
         catalog_size = 18696112
         smallest_bookid = 0
         while smallest_bookid < catalog_size:
@@ -900,7 +900,6 @@ class variableSet(object):
             chunk_results = cursor.fetchall()
             db.query("INSERT INTO temp_counts (bookid, total_count) VALUES %s;" % ",".join([str((tup[0],int(tup[1]))) for tup in chunk_results]))
             smallest_bookid = smallest_bookid + chunk_size
-            sys.exit()
         db.query("INSERT INTO nwords (bookid, nwords) SELECT catalog.bookid, temp_counts.total_count FROM catalog LEFT JOIN nwords USING (bookid) JOIN temp_counts USING (bookid) WHERE nwords.bookid IS NULL;")
         db.query("DROP TABLE temp_counts;")
 #        db.query("INSERT INTO nwords (bookid,nwords) SELECT catalog.bookid,sum(count) FROM catalog LEFT JOIN nwords USING (bookid) JOIN master_bookcounts USING (bookid) WHERE nwords.bookid IS NULL GROUP BY catalog.bookid")
