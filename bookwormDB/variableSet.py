@@ -898,8 +898,7 @@ class variableSet(object):
 #            db.query("INSERT INTO temp_counts (bookid, total_count) SELECT bookid, SUM(count) FROM master_bookcounts WHERE bookid >= %s AND bookid < %s GROUP BY bookid;" % (smallest_bookid, smallest_bookid + chunk_size))
             cursor = db.query("SELECT bookid, SUM(count) FROM master_bookcounts WHERE bookid >= %s AND bookid < %s GROUP BY bookid;" % (smallest_bookid, smallest_bookid + chunk_size))
             chunk_results = cursor.fetchall()
-            logging.debug(",".join([str((tup[0],int(tup[1]))) for tup in chunk_results]));
-#            db.query("INSERT INTO temp_counts (bookid, total_count) VALUES")
+            db.query("INSERT INTO temp_counts (bookid, total_count) VALUES %s;" % ",".join([str((tup[0],int(tup[1]))) for tup in chunk_results]))
             smallest_bookid = smallest_bookid + chunk_size
             sys.exit()
         db.query("INSERT INTO nwords (bookid, nwords) SELECT catalog.bookid, temp_counts.total_count FROM catalog LEFT JOIN nwords USING (bookid) JOIN temp_counts USING (bookid) WHERE nwords.bookid IS NULL;")
