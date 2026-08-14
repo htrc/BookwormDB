@@ -232,6 +232,7 @@ def parse_json_catalog(line_queue, processes, modulo):
 def parse_catalog_multicore():
     from .sqliteKV import KV
     cpus, _ = mp_stats()
+    cpus = 1
     encoded_queue = Queue(10000)
     workers = []
     
