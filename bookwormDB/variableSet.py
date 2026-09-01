@@ -318,7 +318,7 @@ class dataField(object):
         try:
             alreadyExists = self.intType
         except AttributeError:
-            cursor = self.dbToPutIn.query("SELECT count(DISTINCT "+ self.field + ") FROM " + self.table)
+            cursor = self.dbToPutIn.query("SELECT count(*) FROM (SELECT "+ self.field + " FROM " + self.table + " GROUP BY " + self.field + ") t")
             self.nCategories = cursor.fetchall()[0][0]
             self.intType = "INT UNSIGNED"
             if self.nCategories <= 16777215:
