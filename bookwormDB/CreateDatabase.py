@@ -9,6 +9,7 @@ from .variableSet import variableSet
 from .variableSet import splitMySQLcode
 from bookwormDB.configuration import Configfile
 from configparser import NoOptionError
+from MySQLdb.constants import CLIENT
 import logging
 import warnings
 from .sqliteKV import KV
@@ -52,7 +53,7 @@ class DB(object):
             "charset": 'utf8',
             "db": '',
             "local_infile": 1,
-            "client_flag": MySQLdb.constants.CLIENT.MULTI_STATEMENTS | MySQLdb.constants.CLIENT.MULTI_RESULTS}
+            "client_flag": CLIENT.MULTI_STATEMENTS | CLIENT.MULTI_RESULTS}
         logging.debug(connect_args)
         try:
             logging.info(connect_args)
