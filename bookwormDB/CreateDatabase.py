@@ -51,7 +51,8 @@ class DB(object):
             "use_unicode": 'True',
             "charset": 'utf8',
             "db": '',
-            "local_infile": 1}
+            "local_infile": 1,
+            "client_flag": MySQLdb.constants.CLIENT.MULTI_STATEMENTS | MySQLdb.constants.CLIENT.MULTI_RESULTS}
         logging.debug(connect_args)
         try:
             logging.info(connect_args)
